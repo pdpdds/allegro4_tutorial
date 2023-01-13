@@ -1,6 +1,6 @@
-CFLAGS = -I. -I../allegro/include -I../thirdparty/box2d/include -I../thirdparty/alpng13/src -I../thirdparty/algif13/src
+CFLAGS = -I. -I../djgpp/allegro/include -I../thirdparty/box2d/include -I../thirdparty/alpng13/src -I../thirdparty/algif13/src
 
-LDFLAGS = -L../allegro/lib -L../thirdparty/alpng13 -L../thirdparty/box2d -L../thirdparty/algif13
+LDFLAGS = -L../djgpp/allegro/lib -L../thirdparty/alpng13 -L../thirdparty/box2d -L../thirdparty/algif13
 
 CC=$(DJGPP_GCC)
 

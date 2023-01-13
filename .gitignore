@@ -54,3 +54,5 @@ dkms.conf
 .vs/
 Debug/
 Release/
+djgpp
+CWSDPMI.SWP
