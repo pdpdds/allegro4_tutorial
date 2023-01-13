@@ -32,16 +32,15 @@ const int SCALED_HEIGHT = HEIGHT / MET2PIX;
 #define M_PI    3.14159265358979323846264338327950288   /**< pi */
 #endif
 
-//1 rad × 180/π = 57,296°
+//1 rad × 180/? = 57,296°
 const float RAD2DEG = 180 / M_PI;
 
-volatile long g_speed_counter = 0; //속도 카운터
-
-void increment_speed_counter() //속도 카운터 값을 증가시키는 카운터 함수
+volatile long g_speed_counter = 0; //?�도 카운??
+void increment_speed_counter() //?�도 카운??값을 증�??�키??카운???�수
 {
     g_speed_counter++;
 }
-END_OF_FUNCTION(increment_speed_counter); //타이머 함수가 끝난다는 것을 명시적으로 설정
+END_OF_FUNCTION(increment_speed_counter); //?�?�머 ?�수가 ?�난?�는 것을 명시?�으�??�정
 
 using namespace std;
 
@@ -51,20 +50,24 @@ typedef struct ALLEGRO_Rect
     int w, h;
 } ALLEGRO_Rect;
 
-#undef main
-int main()
+int main(int argc, char* argv[])
 {
     allegro_init();
     install_keyboard();
     set_color_depth(16);
-    set_gfx_mode(GFX_AUTODETECT_WINDOWED, WIDTH, HEIGHT, 0, 0);
-    install_timer(); //타이머 시스템을 초기화한다
-   // LOCK_VARIABLE(g_speed_counter);
-   // LOCK_FUNCTION(increment_speed_counter);
 
-    //install_int_ex(increment_speed_counter, BPS_TO_TIMER(60)); //초당 타이머 함수 호출 수(BEAT PER SECOND)
-    auto Width = WIDTH;
-    auto Height = HEIGHT;
+#if defined(WIN32)
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED, WIDTH, HEIGHT, 0, 0);
+#else
+    set_gfx_mode(GFX_AUTODETECT, WIDTH, HEIGHT, 0, 0);
+#endif
+    install_timer(); 
+	LOCK_VARIABLE(g_speed_counter);
+    LOCK_FUNCTION(increment_speed_counter);
+
+    install_int_ex(increment_speed_counter, BPS_TO_TIMER(60)); 
+    int Width = WIDTH;
+    int Height = HEIGHT;
     
     cout << "Width of the Screen: " << Width << endl;
     cout << "Height of the Screen: " << Height << endl;
@@ -185,21 +188,27 @@ int main()
    
     while (!key[KEY_ESC])
     {
+				while(g_speed_counter == 0) {
+        rest(1); //Wait for a full tick
+      }
+	  
         b2Vec2 pos = Body->GetPosition(); // Body = Body from box
         float angle = Body->GetAngle();
 
         // RAD2Degree
         angle *= RAD2DEG;
 
-      //  while (g_speed_counter > 0)
+        while (g_speed_counter > 0)
         {
+	
+	  
             if (key[KEY_R])
             {
                 Body->SetTransform(b2Vec2(x_box, y_box), angle_box);
                 Body->SetLinearVelocity(vel);
             }
 
-            //g_speed_counter--;
+            g_speed_counter--;
         }
 
         // question box, update x and y destination
@@ -236,7 +245,7 @@ int main()
 
         world->Step(1.0f / 60.0f, 6.0f, 2.0f); // update
 
-       // RenderBall(buffer, pBall); //더블 버퍼링을 사용해서 화면을 갱신한다.
+       // RenderBall(buffer, pBall); //?�블 버퍼링을 ?�용?�서 ?�면??갱신?�다.
     }
 
     // box2D delete whole world and free memory
@@ -249,6 +258,6 @@ int main()
 
     return EXIT_SUCCESS;
 }
-
+END_OF_MAIN()
 
 
