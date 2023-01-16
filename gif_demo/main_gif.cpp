@@ -1,11 +1,11 @@
 #include <algif.h>
 
 #undef main
-int main()
+int main(int argc, char *argv[]) { 
 {
     char const *name = "gifs/alex.gif";
-    //if (argc == 2)
-      //  name = argv[1];
+    if (argc == 2)
+        name = argv[1];
     allegro_init ();
     set_color_depth(16);
     set_gfx_mode(GFX_AUTODETECT, 640, 480, 0, 0);
