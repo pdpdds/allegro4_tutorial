@@ -19,12 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\common.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\dct64_i386.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\decode_i386.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\interface.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\layer2.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\layer3.c" />
+    <ClCompile Include="..\thirdparty\almp3\decoder\tabinit.c" />
+    <ClCompile Include="..\thirdparty\almp3\src\almp3.c" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{018E2B68-AACA-49B5-9AA4-34AAB91B24A5}</ProjectGuid>
+    <ProjectGuid>{07B93FB6-A8AB-4CF6-8B00-E10E7CA91705}</ProjectGuid>
     <RootNamespace>bitmap</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -91,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ALLEGRO4DOS)\include\;$(ALLEGRO4DOS)\alpng13\src;../thirdparty/algif13/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ALLEGRO4DOS)\include\;$(ALLEGRO4DOS)\alpng13\src;../thirdparty/almp3/include;../thirdparty/almp3/decoder</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4305</DisableSpecificWarnings>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
