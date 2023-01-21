@@ -1,0 +1,3 @@
+alsub.o: src/alsub.cpp include/alsub.h
+as_text.o: src/as_text.cpp include/alsub.h
+sample01.o: samples/sample01.cpp include/alsub.h samples/sample.h

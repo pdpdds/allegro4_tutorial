@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> AlSub </TITLE>
+<LINK TYPE="text/css" HREF="padrao.css" REL=stylesheet>
+</HEAD>
+
+<BODY>
+
+<h1>AlSub</h1>
+
+<p>This is the manual of the library AlSub version 0.1.0</p>
+<p>This software don't have any warranty, Use it at your own risk!</p>
+<p>See in <a href="lgpl.txt">lgpl.txt</a> what you can or can't do with it.</p>
+
+<ul>
+	<li><A HREF="#intro">Introduction</A>
+	<li><A HREF="#inst">Installing</A>
+	<li><A HREF="#usando">Using</A>
+	<li><A HREF="#manual">Manual - classes and methods</A>
+	<ul>
+		<li><A HREF="#alsub_text">ALSUB_TEXT</A>
+		<li><A HREF="#alsub">ALSUB</A>
+	</ul>
+	<li><A HREF="#contato">Contact</A>
+</ul>
+
+<a name="intro"><h2>Introduction</h2></a>
+
+<p>AlSub is a very simple library, planned specially to play subtitles with Allegro. It can import and export files in <a href="sub.en.html">.sub</a> format, convert between different rates of frames per second and add more subtitles in real time.</p>
+
+<a name="inst"><h2>Installing</h2></a>
+
+<p>To compile and install, using DJGPP or Mingw32, it's very simple. After unpacking the source files (remember to maintain the directory struct) type:</p>
+<pre>fix mingw32 (or fix djgpp)
+make
+make install</pre>
+
+<a name="usando"><h2>Using</h2></a>
+
+<p>To use the library with your own program, put</p>
+<pre>#include &lt;alsub.h&gt;</pre>
+<p>with the other includes, and in the link stage use</p>
+<pre>gcc -o test.exe test.o -lalsub -lalleg</pre>
+
+<a name="manual"><h2>Manual - classes and methods</h2></a>
+
+<a name="alsub_text"><h3>ALSUB_TEXT</h3></a>
+<p>The class ALSUB_TEXT contain the needed information for each subtitle.</p>
+
+<p><b>ALSUB_TEXT::ALSUB_TEXT(const int &ini = 0, const int &end = 0, const std::string &text = "");
+ALSUB_TEXT::ALSUB_TEXT(const ALSUB_TEXT &ast);</b><br>
+Constructor of class, where you can make a copy of other ALSUB_TEXT, or put the initial frame(<I>ini</I>) and end frame(<I>end</I>) and the string(<I>text</I>).</p>
+
+<p><B>void ALSUB_TEXT::set(const int &ini = 0, const int &end = 0, const std::string &text = "");</B><br>
+Set the attributes of initial frame (<I>ini</I>), end frame(<I>end</I>) and text(<I>text</I>) of the object.</p>
+
+<p><b>void ALSUB_TEXT::get(int *ini, int *end, std::string *text);</b><br>
+Copy the attributes initial frame, in <I>ini</I>, end frame, in <I>end</I>, and text, in <I>text</I>, of the object.</p>
+
+<p><b>bool ALSUB_TEXT::operator ==(const ALSUB_TEXT &ast);</b><br>
+Overload of operator ==, compare the fields initial frame, end frame and the text, returning true if all are equals.</p>
+
+<p><b>bool ALSUB_TEXT::operator &lt;(const ALSUB_TEXT &ast);</b><br>
+Overload of operator &lt;, compare the initial frame of both, returning true if the initial frame of <I>ast</I> is bigger than the other.</p>
+
+
+<a name="alsub"><h3>ALSUB</h3></a>
+<p>The main class of the library, contain one list of objects ALSUB_TEXT which can be displayed conform the actual frame, can import and export <a href="sub.en.html">.sub</a> files and convert between different rates of frame per second.</p>
+
+<p><b>void ALSUB::insert_text(const ALSUB_TEXT &ast);<br>
+void ALSUB::insert_text(const int &ini = 0, const int &end = 0, const std::string &text = "");</b><br>
+Insert in the list of subtitles one object ALSUB_TEXT, or make one with the arguments. The arguments are initial frame(<I>ini</I>) and end frame(<I>end</I>) and the string(<I>text</I>)</p>
+
+<p><b>void ALSUB::delete_text(const ALSUB_TEXT &ast);<br>
+void ALSUB::delete_text(const int &ini = 0, const int &end = 0, const std::string &text = "");</b><br>
+Remove from the list of subtitles the object ALSUB_TEXT passed, or one with the arguments. The arguments are initial frame(<I>ini</I>) and end frame(<I>end</I>) and the string(<I>text</I>)</p>
+
+<p><b>void ALSUB::update_frame(int frame);</b><br>
+Update the position of the list of subtitles. Call before ALSUB::display().</p>
+
+<p><b>void ALSUB::reset_frame(void);<br>
+void ALSUB::inc_frame(void);<br>
+void ALSUB::dec_frame(void);</b><br>
+These methods are to help in the control of frames per second. ALSUB::reset_frame() sets the current frame to 0, ALSUB::inc_frame() increment in one the current frame and ALSUB::dec_frame() decrement in one the current frame.</p>
+
+<p><b>void ALSUB::display(BITMAP *bmp, const FONT *fonte = font, int x = 0, int y = 0, int c = 0, int borderc = -1, ALSUB_HALIGN halign = LEFT, ALSUB_VALIGN valign = TOP);</b><br>
+Display the current active subtitle in a allegro BITMAP (<I>bmp</I>), using the font (<I>fonte</I>) and in the position <I>x</I>, <I>y</I>. The argument <I>c</I> is the text color, and <I>borderc</I> is the border text color(-1 for transparent). The argument <I>halign</I> is of the ALSUB_HALIGN type and can be LEFT, CENTER or RIGHT, and <I>valign</I> is of ALSUB_VALIGN type and can be TOP, MIDDLE or BOTTOM.</p>
+
+<p><b>int ALSUB::load(const char *file);</b><br>
+Import a file (<I>file</I>) in <a href="sub.en.html">.sub</a> format. The current subtitles list is cleared and then the file is loaded. Return 0 if ok, 1 if the file can't be opened.</p>
+
+<p><b>int ALSUB::save(const char *file);</b><br>
+Export a file (<I>file</I>) in <a href="sub.en.html">.sub</a> format.</p>
+
+<p><b>void ALSUB::convert(const float &afps, const float &nfps);</b><br>
+Convert between two different rates of frames per second, where <I>afps</I> is the current rate and <I>nfps</I> is the new rate. Return 0 if ok, 1 if the file can't be opened.</p>
+
+
+<a name="contato"><h2>Contact</h2></a>
+
+<p>Any critic or suggestion, e-mail to <a href="mailto:dudaskank@yahoo.com">dudaskank@yahoo.com</a>
+
+<p align=center><I><B>No need for a conclusion</B></I></p>
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> AlSub </TITLE>
+<LINK TYPE="text/css" HREF="padrao.css" REL=stylesheet>
+</HEAD>
+
+<BODY>
+
+<h1>AlSub</h1>
+
+<p>Este é o manual da biblioteca AlSub versão 0.1.0</p>
+<p>Este software não possui nenhuma garantia, use-o ao seu próprio risco!</p>
+<p>Veja em <a href="lgpl.txt">lgpl.txt</a> o que você pode ou não fazer com isto.</p>
+
+<ul>
+	<li><A HREF="#intro">Introdução</A>
+	<li><A HREF="#inst">Instalando</A>
+	<li><A HREF="#usando">Usando</A>
+	<li><A HREF="#manual">Manual - classes e métodos</A>
+	<ul>
+		<li><A HREF="#alsub_text">ALSUB_TEXT</A>
+		<li><A HREF="#alsub">ALSUB</A>
+	</ul>
+	<li><A HREF="#contato">Contato</A>
+</ul>
+
+<a name="intro"><h2>Introdução</h2></a>
+
+<p>AlSub é uma biblioteca bem simples, desenvolvida especialmente para desenhar legendas em conjunto com o Allegro. É capaz de importar e exportar arquivos no formato <a href="sub.pt.html">.sub</a>, converter entre diferentes taxas de quadros por segundo e adicionar mais legendas em tempo real.</p>
+
+<a name="inst"><h2>Instalando</h2></a>
+
+<p>Para compilar e instalar, usando DJGPP ou Mingw32, é bem simples. Depois de descompactar os códigos fontes (lembre-se de manter a estrutura de diretório) digite:</p>
+<pre>fix mingw32 (ou fix djgpp, depende do que você usar)
+make
+make install</pre>
+
+<a name="usando"><h2>Usando</h2></a>
+
+<p>Para usar a biblioteca junto com seu programa, coloque</p>
+<pre>#include &lt;alsub.h&gt;</pre>
+<p>junto com os outros includes e na hora de linkar, use</p>
+<pre>gcc -o test.exe test.o -lalsub -lalleg</pre>
+
+<a name="manual"><h2>Manual - classes e métodos</h2></a>
+
+<a name="alsub_text"><h3>ALSUB_TEXT</h3></a>
+<p>A classe ALSUB_TEXT contém as informações necessárias para cada uma das legendas que serão apresentadas.</p>
+
+<p><b>ALSUB_TEXT::ALSUB_TEXT(const int &ini = 0, const int &end = 0, const std::string &text = "");
+ALSUB_TEXT::ALSUB_TEXT(const ALSUB_TEXT &ast);</b><br>
+Construtor da classe, onde você pode passar um objeto ALSUB_TEXT que será copiado, ou então os quadros de início (<I>ini</I>) e fim (<I>end</I>) e a string que será apresentada (<I>text</I>).</p>
+
+<p><B>void ALSUB_TEXT::set(const int &ini = 0, const int &end = 0, const std::string &text = "");</B><br>
+Seta os atributos de quadro de início (<I>ini</I>), quadro final (<I>end</I>) e texto apresentado (<I>text</I>) do objeto.</p>
+
+<p><b>void ALSUB_TEXT::get(int *ini, int *end, std::string *text);</b><br>
+Copia os atributos quadro de início, em <I>ini</I>, quadro final, em <I>end</I>, e texto apresentado, em <I>text</I>, do objeto.</p>
+
+<p><b>bool ALSUB_TEXT::operator ==(const ALSUB_TEXT &ast);</b><br>
+Sobrecarga do operador ==, ele compara os campos quadro de início e final e o texto, retornando true se todos forem iguais</p>
+
+<p><b>bool ALSUB_TEXT::operator &lt;(const ALSUB_TEXT &ast);</b><br>
+Sobrecarga do operador &lt;, compara o atributo quadro inicial dos dois, retornando true se o quadro inicial de <I>ast</I> for maior do que o do outro objeto.</p>
+
+
+<a name="alsub"><h3>ALSUB</h3></a>
+<p>A classe principal da biblioteca, contém uma lista de objetos ALSUB_TEXT que podem ser apresentados conforme o quadro atual, podendo exportar e importar arquivos <a href="sub.pt.html">.sub</a> e converter entre diferentes taxas de quadros por segundo.</p>
+
+<p><b>void ALSUB::insert_text(const ALSUB_TEXT &ast);<br>
+void ALSUB::insert_text(const int &ini = 0, const int &end = 0, const std::string &text = "");</b><br>
+Insere na lista de legendas um objeto ALSUB_TEXT, ou cria um com os argumentos passados. Os argumentos são quadro inicial (<I>ini</I>), quadro final (<I>end</I>) e texto (<I>text</I>).</p>
+
+<p><b>void ALSUB::delete_text(const ALSUB_TEXT &ast);<br>
+void ALSUB::delete_text(const int &ini = 0, const int &end = 0, const std::string &text = "");</b><br>
+Retira da lista de legendas o objeto ALSUB_TEXT passado, ou um com os argumentos quadro inicial (<I>ini</I>), quadro final (<I>end</I>) e texto (<I>text</I>).</p>
+
+<p><b>void ALSUB::update_frame(int frame);</b><br>
+Atualiza o posicionamento na lista de legendas. Chame antes de usar ALSUB::display().</p>
+
+<p><b>void ALSUB::reset_frame(void);<br>
+void ALSUB::inc_frame(void);<br>
+void ALSUB::dec_frame(void);</b><br>
+Estes são métodos para auxiliar no controle dos quadros. ALSUB::reset_frame() seta o quadro atual em 0, ALSUB::inc_frame() incrementa uma unidade o quadro atual e ALSUB::dec_frame() decrementa em uma unidade o quadro atual.</p>
+
+<p><b>void ALSUB::display(BITMAP *bmp, const FONT *fonte = font, int x = 0, int y = 0, int c = 0, int borderc = -1, ALSUB_HALIGN halign = LEFT, ALSUB_VALIGN valign = TOP);</b><br>
+Mostra a legenda atual num BITMAP do allegro (<I>bmp</I>), usando a fonte (<I>fonte</I>) e no local indicado pelas coordenadas <I>x</I>, <I>y</I>. O argumento <I>c</I> é a cor do texto, e <I>borderc</I> é a cor da borda (-1 para transparente). O argumento <I>halign</I> é do tipo ALSUB_HALIGN e pode ser LEFT, CENTER ou RIGHT, e <I>valign</I> é do tipo ALSUB_VALIGN e pode ser TOP, MIDDLE ou BOTTOM.</p>
+
+<p><b>int ALSUB::load(const char *file);</b><br>
+Importa um arquivo (<I>file</I>) do formato <a href="sub.pt.html">.sub</a>. Primeiro a lista de legendas atual é limpa e em seguida carregada do arquivo. Retorna 0 se ok, 1 se não foi possível abrir o arquivo.</p>
+
+<p><b>int ALSUB::save(const char *file);</b><br>
+Exporta um arquivo (<I>file</I>) do formato <a href="sub.pt.html">.sub</a>. Retorna 0 se ok, 1 se não foi possível abrir o arquivo.</p>
+
+<p><b>void ALSUB::convert(const float &afps, const float &nfps);</b><br>
+Converte entre duas taxas de quadros por segundo diferentes, onde <I>afps</I> é a taxa atual e <I>nfps</I> é a nova taxa.</p>
+
+
+<a name="contato"><h2>Contato</h2></a>
+
+<p>Alguma crítica ou sugestão, mande um e-mail para <a href="mailto:dudaskank@yahoo.com">dudaskank@yahoo.com</a>
+
+<p align=center><I><B>Sem necessidade para um conclusão</B></I></p>
+
+
+</BODY>
+</HTML>

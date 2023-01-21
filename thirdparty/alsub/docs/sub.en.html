@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> Sub format</TITLE>
+<LINK TYPE="text/css" HREF="padrao.css" REL=stylesheet>
+</HEAD>
+
+<BODY>
+<h1> Sub Format </h1>
+
+<p>The .sub file format is a format of subtitle very simple, of the type MicroDVD.</p>
+
+<p>It simply consists of various lines in that form</p>
+
+<pre>{20}{120}This is a test|Hello world!!!
+{121}{220}More one test</pre>
+
+<p>The first number between brackets is the initial frame, the second is the end frame and the third is the subtitle which will appear while the current frame stay between initial and end frames.</p>
+
+<p>In the first line exist a character '|'. It's denotes a new line there, showing something like this in screen:</p>
+
+<pre>This is a test
+Hello world!!!</pre>
+
+<p>Remember, the order is very important, the lines must be in crescent order and can't "collide" with each other, and the numbers between the brackets can't have any space, inside or outside:</p>
+
+<pre>{ 20}{120}One space in the 1st number|it won't work
+{121}{180}Ok this line...
+{160}{1220}Start before the previous line, won't work too</pre>
+
+<p>This won't work correctly.</p>
+
+<p>If yet you don't know how to make one .sub file, run the program sample01.exe, in directory samples. It exports a file called temp.sub, only to test the method ALSUB::save(). Open it and see how it is.</p>
+
+</BODY>
+</HTML>

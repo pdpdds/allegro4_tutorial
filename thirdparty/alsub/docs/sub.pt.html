@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> Formato sub </TITLE>
+<LINK TYPE="text/css" HREF="padrao.css" REL=stylesheet>
+</HEAD>
+
+<BODY>
+<h1> Formato sub </h1>
+
+<p>O formato de arquivo .sub é um formato de legenda bem simples, do tipo MicroDVD.</p>
+
+<p>Ele simplesmente consiste de várias linhas neste formato:</p>
+
+<pre>{20}{120}Isto é um teste|Olá mundo!!!
+{121}{220}Mais um teste</pre>
+
+<p>O primeiro número entre chaves é o quadro inicial, o segundo é o quadro final e o terceiro é a legenda que irá aparecer enquanto o quadro atual estiver entre os o quadro inicial e o quadro final.</p>
+
+<p>Observe que, na primeira linha, existe um caractere '|'. Ele indica uma nova linha, ou seja, fica mais ou menos assim na tela:</p>
+
+<pre>Isto é um teste
+Olá mundo!!!</pre>
+
+<p>Lembre-se também de que a ordem é muito importante, as linhas devem estar em ordem crescente e não podem "colidir" umas com as outras, e os números entre as chaves não podem ter nenhum espaço, nem dentro das chaves e nem fora:</p>
+
+<pre>{ 20}{120}Tem um espaço no 1º número|não vai funcionar
+{121}{180}Ok esta linha...
+{160}{1220}Começa antes de acabar a legenda anterior, também não funciona</pre>
+
+<p>Isto não funcionará corretamente</p>
+
+<p>Caso ainda tenha alguma dúvida de como fazer um arquivo .sub, rode o programa sample01.exe, do diretório samples. Ele exporta um arquivo chamado temp.sub, apenas para testar o método ALSUB::save(). Abra-o e veja como ele é.</p>
+
+</BODY>
+</HTML>

@@ -1,0 +1,79 @@
+# define o nome dos programas a serem usados
+COMPILER       := $(GCC)
+PREPROCESSOR   := $(GPP) -P -undef
+LINKER         := $(GCC)
+COMPILER_FLAGS := $(CFLAGS)
+OBJDIR         := $(OBJ_DIR)
+
+
+# seta os flags de compilação e linkedição para mingw
+#COMPILER_FLAGS += -mwindows
+COMPILER_FLAGS += -I..\..\djgpp\allegro\include -Wno-deprecated-declarations
+#LFLAGS += $(addprefix -l,$(LIBRARY)) -mwindows
+LFLAGS += -L../../djgpp/allegro/lib $(addprefix -l,$(LIBRARY)) 
+
+
+# gera os objetos
+OBJECTS   := $(addprefix $(OBJ_DIR)/, $(addsuffix .$(OBJ_SUFFIX), $(SRC_FILES)))
+EXP_OBJ   := $(addprefix $(OBJ_DIR)/, $(addsuffix .$(OBJ_SUFFIX), $(EXP_FILES)))
+
+# prepare to install:
+
+.PHONY: baddj
+
+ifdef DJDIR
+   DJDIR_U = $(subst \,/,$(DJDIR))
+   DJDIR_D = $(subst /,\,$(DJDIR))
+else
+baddj:
+	@echo Please specify your djgpp directory via DJDIR=. Like in Allegro.
+endif
+
+
+# por padrão, gera a bibliteca e os exemplos
+default : $(LIB) $(EXAMPLES) finish
+
+
+$(LIB) : $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $^
+
+
+$(EXAMPLES) : $(EXP_OBJ)
+	$(LINKER) -o $@ $< $(LIB) $(LFLAGS)
+
+
+$(OBJDIR)/%.$(OBJ_SUFFIX) : $(SRC_DIR)/%.$(SRC_SUFFIX)
+	$(COMPILER) $(COMPILER_FLAGS) -c -o $@ $<
+
+
+$(OBJDIR)/%.$(OBJ_SUFFIX) : $(EXP_DIR)/%.$(SRC_SUFFIX)
+	$(COMPILER) $(COMPILER_FLAGS) -c -o $@ $<
+
+
+finish:
+	@echo The optimized library $(NAME) version $(VERSION) has been compiled!
+
+#arquivos para instalação
+INSTALL_FILES = $(DJDIR_U)/lib/$(LIB_NAME)                  \
+		$(DJDIR_U)/include/alsub.h
+
+UNINSTALL_FILES = $(DJDIR_U)/lib/$(LIB_NAME)                \
+		$(DJDIR_U)/include/alsub.h
+
+
+$(DJDIR_U)/lib/$(LIB_NAME): $(LIB)
+	copy /B $(subst /,\,$(LIB)) $(DJDIR_D)\lib\$(LIB_NAME)
+
+
+$(DJDIR_U)/include/%.h: include/%.h
+	copy /B $(subst /,\,$< $@)
+
+
+install: $(INSTALL_FILES)
+	@echo The library $(NAME) version $(VERSION) has been instaled.
+
+
+uninstall:
+	$(RM) $(RMFLAGS) $(UNINSTALL_FILES)
+	@echo All gone!
+

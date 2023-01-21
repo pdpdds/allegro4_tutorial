@@ -1,0 +1,39 @@
+.PHONY: clean distclean veryclean examples distro
+
+
+# exporta todas as variáveis para os sub-makes
+export
+
+# deleta os .o e .a gerados
+clean:
+	$(RM) $(RMFLAGS) $(EXP_DIR)/*.o* $(OBJDIR)/*.o* $(LIB_DIR)/*.a*
+
+
+# chama clean e deleta também os .exe
+distclean: clean
+	$(RM) $(RMFLAGS) $(EXP_DIR)/*.exe $(TOOLS_DIR)/*.exe
+
+
+# chama distclean e deleta as dependências
+veryclean: distclean
+	$(RM) $(RMFLAGS) $(EXP_DIR)/*.exe $(TOOLS_DIR)/*.exe
+	$(RM) $(RMFLAGS) $(OBJ_DIR)/makefile.dep
+
+distro:
+	$(RM) $(RMFLAGS) $(NAME)-$(VERSION).7z $(NAME)-$(VERSION).zip $(NAME)-$(VERSION).tar.gz
+	$(COMPACTADOR) $(DISTRO_ZIP) $(NAME)-$(VERSION).zip $(DISTRO_FILES)
+	$(COMPACTADOR) $(DISTRO_TAR) $(NAME)-$(VERSION).tar $(DISTRO_FILES)
+	$(COMPACTADOR) $(DISTRO_GZIP) $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION).tar
+	$(COMPACTADOR) $(DISTRO_7Z) $(NAME)-$(VERSION).7z $(DISTRO_FILES)
+	$(RM) $(RMFLAGS) $(NAME)-$(VERSION).tar
+
+
+# cria as dependências dos arquivos
+depend:
+	$(GCC) $(DEPFLAGS) $(SRC_DIR)/*.$(SRC_SUFFIX) > makefile.dep
+	$(GCC) $(DEPFLAGS) $(EXP_DIR)/*.$(SRC_SUFFIX) >> makefile.dep
+	@move makefile.dep $(OBJ_DIR)
+#	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/$(subst /,\/,$(OBJ_DIR))\/\1\.$(OBJ_SUFFIX):/" _depend.tmp > $(OBJ_DIR)/makefile.dep
+#	$(RM) $(RMFLAGS) _depend.tmp
+
+

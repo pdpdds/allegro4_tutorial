@@ -1,0 +1,81 @@
+# Baseado no makefile do KQ, por Rey Brujo #
+
+
+# define o nome dos programas a serem usados
+COMPILER       := $(GCC)
+PREPROCESSOR   := $(GPP) -P -undef
+LINKER         := $(GCC)
+COMPILER_FLAGS := $(CFLAGS)
+OBJDIR         := $(OBJ_DIR)
+
+
+# seta os flags de compilação e linkedição para mingw
+COMPILER_FLAGS += -mwindows
+LFLAGS += $(addprefix -l,$(LIBRARY)) -mwindows
+
+
+# gera os objetos
+OBJECTS   := $(addprefix $(OBJ_DIR)/, $(addsuffix .$(OBJ_SUFFIX), $(SRC_FILES)))
+EXP_OBJ   := $(addprefix $(OBJ_DIR)/, $(addsuffix .$(OBJ_SUFFIX), $(EXP_FILES)))
+
+# prepare to install:
+
+.PHONY: badming
+
+ifdef MINGDIR
+   MINGDIR_U = $(subst \,/,$(MINGDIR))
+   MINGDIR_D = $(subst /,\,$(MINGDIR))
+else
+badming:
+	@echo Please specify your mingw32 directory via MINGDIR=. Like in Allegro.
+endif
+
+
+# por padrão, gera a bibliteca e os exemplos
+default : $(LIB) $(EXAMPLES) finish
+
+
+$(LIB) : $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $^
+
+
+$(EXAMPLES) : $(EXP_OBJ)
+	$(LINKER) -o $@ $< $(LIB) $(LFLAGS)
+
+
+$(OBJDIR)/%.$(OBJ_SUFFIX) : $(SRC_DIR)/%.$(SRC_SUFFIX)
+	$(COMPILER) $(COMPILER_FLAGS) -c -o $@ $<
+
+
+$(OBJDIR)/%.$(OBJ_SUFFIX) : $(EXP_DIR)/%.$(SRC_SUFFIX)
+	$(COMPILER) $(COMPILER_FLAGS) -c -o $@ $<
+
+
+finish:
+	@echo The optimized library $(NAME) version $(VERSION) has been compiled!
+
+
+#arquivos para instalação
+INSTALL_FILES = $(MINGDIR_U)/lib/$(LIB_NAME)                  \
+		$(MINGDIR_U)/include/alsub.h
+
+UNINSTALL_FILES = $(MINGDIR_U)/lib/$(LIB_NAME)                \
+		$(MINGDIR_U)/include/alsub.h
+
+
+$(MINGDIR_U)/lib/$(LIB_NAME): $(LIB)
+	copy /B $(subst /,\,$(LIB)) $(MINGDIR_D)\lib\$(LIB_NAME)
+
+
+$(MINGDIR_U)/include/%.h: include/%.h
+	copy /B $(subst /,\,$< $@)
+
+
+install: $(INSTALL_FILES)
+	@echo The library $(NAME) version $(VERSION) has been instaled.
+
+
+uninstall:
+	$(RM) $(RMFLAGS) $(UNINSTALL_FILES)
+	@echo All gone!
+
